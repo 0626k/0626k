@@ -1,38 +1,37 @@
-import tkinter as tk
-from tkinter import messagebox
+import nltk
+from nltk.stem import WordNetLemmatizer
+from tkinter import Tk, Label, Entry, Button, Text
 
-def register():
-    username = entry_username.get()
-    password = entry_password.get()
-    email = entry_email.get()
-    
-    if username and password and email:
-        messagebox.showinfo("Success", "Registration successful!")
-    else:
-        messagebox.showerror("Error", "Please fill all fields!")
+# Define the chatbot's responses
+responses = {
+    'hello': 'Hi! How can I help you?',
+    'goodbye': 'See you later!'
+}
 
-root = (link unavailable)()
-root.title("Registration Form")
+# Create the chat window
+root = Tk()
+root.title("Chatbot")
 
-label_username = tk.Label(root, text="Username:")
-label_username.grid(row=0, column=0)
+# Create the chat input field
+entry = Entry(root)
+entry.pack()
 
-entry_username = tk.Entry(root)
-entry_username.grid(row=0, column=1)
+# Create the chat output field
+output = Text(root)
+output.pack()
 
-label_password = tk.Label(root, text="Password:")
-label_password.grid(row=1, column=0)
+# Define the chatbot's logic
+def chatbot_response():
+    user_input = entry.get()
+    lemmatizer = WordNetLemmatizer()
+    tokens = nltk.word_tokenize(user_input)
+    tokens = [lemmatizer.lemmatize(token) for token in tokens]
+    response = responses.get(tokens[0].lower(), "I didn't understand that.")
+    output.insert(tk.END, "User: " + user_input + "\n")
+    output.insert(tk.END, "Chatbot: " + response + "\n")
 
-entry_password = tk.Entry(root, show="*")
-entry_password.grid(row=1, column=1)
-
-label_email = tk.Label(root, text="Email:")
-label_email.grid(row=2, column=0)
-
-entry_email = tk.Entry(root)
-entry_email.grid(row=2, column=1)
-
-button_register = tk.Button(root, text="Register", command=register)
-button_register.grid(row=3, column=1)
+# Create the chat button
+button = Button(root, text="Chat", command=chatbot_response)
+button.pack()
 
 root.mainloop()
